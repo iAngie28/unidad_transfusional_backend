@@ -18,9 +18,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 
 # backend/config/settings.py
+allowed_hosts_env = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1,.localhost')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.localhost', '.onrender.com'] # El punto permite subdominios
-
+# 3. Convertimos ese string en una lista real de Python
+ALLOWED_HOSTS = allowed_hosts_env.split(',')
 
 # 1. DEFINICIÓN DE APPS MULTI-TENANT
 SHARED_APPS = (
@@ -82,6 +83,7 @@ INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in S
 # 2. CONFIGURACIÓN DE MIDDLEWARE (Orden crítico)
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',         # 1. CORS primero
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django_tenants.middleware.main.TenantMainMiddleware', # Enruta al esquema correcto basado en el dominio
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
