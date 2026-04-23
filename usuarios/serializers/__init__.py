@@ -1,1 +1,2 @@
 from .usuario_serializers import UsuarioSerializer, RolSerializer
+from .registro_serializer import RegistroSerializer

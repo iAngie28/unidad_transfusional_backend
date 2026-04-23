@@ -1,6 +1,10 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from core.services.bitacora_service import BitacoraService
+from ..serializers.registro_serializer import RegistroSerializer
 
 class CustomTokenSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
@@ -41,3 +45,46 @@ class LoginView(TokenObtainPairView):
     Endpoint central de autenticación.
     """
     serializer_class = CustomTokenSerializer
+
+
+class RegistroView(generics.CreateAPIView):
+    """
+    Endpoint público para registrar una nueva Unidad Transfusional con su usuario administrador.
+    
+    Acepta:
+    - first_name: Nombre del administrador
+    - last_name: Apellido del administrador
+    - email: Email único del administrador
+    - password: Contraseña (min 8 caracteres)
+    - nombre: Nombre de la Unidad Transfusional
+    - subdominio: (Opcional) Subdominio. Si no se proporciona, se genera del nombre
+    
+    Retorna:
+    - access: Token JWT de acceso
+    - refresh: Token JWT de refresco
+    - subdominio: El subdominio creado (generado o proporcionado)
+    - unidad: Información de la unidad creada
+    """
+    serializer_class = RegistroSerializer
+    permission_classes = [AllowAny]  # Permite el acceso
+    authentication_classes = []
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        # Crear la unidad, usuario y retornar tokens
+        result = serializer.save()
+        
+        return Response(
+            {
+                'access': result['access'],
+                'refresh': result['refresh'],
+                'user': {
+                    'email': request.data.get('email'),
+                    'nombre': f"{request.data.get('first_name')} {request.data.get('last_name')}",
+                    'subdominio': result['subdominio'],
+                    'unidad_nombre': result['unidad']['nombre'],
+                },
+            },
+            status=status.HTTP_201_CREATED
+        )
