@@ -39,7 +39,7 @@ SHARED_APPS = (
     'rest_framework',
     'corsheaders',
 )
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 TENANT_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.auth',
