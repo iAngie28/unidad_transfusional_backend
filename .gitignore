@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos Virtuales
+venv/
+env/
+ENV/
+.venv/
+
+# Base de datos local (por si acaso usas sqlite3 en algún momento)
+*.sqlite3
+
+# Archivos de configuración sensible (SECRET_KEY, DB_PASS, etc)
+.env
+
+# Archivos estáticos y media cargada
+staticfiles/
+media/
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+*.swp
