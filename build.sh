@@ -2,15 +2,12 @@
 # Salir si ocurre un error
 set -o errexit
 
-# Instalar dependencias
+# 1. Instalar dependencias
 pip install -r requirements.txt
 
-# RECOLECTAR ESTÁTICOS
+# 2. Recolectar archivos estáticos (Para que Render sirva CSS/JS del Admin)
 python manage.py collectstatic --no-input
 
-# RESET, MIGRATE Y SEED (Todo en uno)
-# Nota: En producción real, esto borraría tus datos. 
-# Como estamos en desarrollo/fase 1, es perfecto.
+# 3. Limpiar, Migrar y Cargar Datos (Usando el comando que creamos)
+# Este comando hace el DROP SCHEMA, migrate y seed_data por ti.
 python manage.py reset_db
-
-echo "Despliegue finalizado con éxito."
