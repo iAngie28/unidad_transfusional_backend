@@ -150,5 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://unidad-transfusional-frontend.onrender.com",
+    "http://localhost:3000",
+]
 CORS_ALLOW_CREDENTIALS = True
