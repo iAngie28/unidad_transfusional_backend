@@ -1,0 +1,4 @@
+from .prueba_pretransfusional_pac_views import PruebaPretransfusionalPACViewSet
+from .pruebas_pretransf_hema_views import PruebasPretransfHemaViewSet
+from .transfusion_views import TransfusionViewSet
+from .reaccion_views import ReaccionViewSet

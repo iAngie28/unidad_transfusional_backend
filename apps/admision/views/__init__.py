@@ -1,0 +1,6 @@
+from .citacion_donante_views import CitacionDonanteViewSet
+from .consentimiento_informado_views import ConsentimientoInformadoViewSet
+from .medico_views import MedicoViewSet
+from .paciente_views import PacienteViewSet
+from .pago_views import PagoViewSet
+from .solicitud_transfusion_views import SolicitudTransfusionViewSet

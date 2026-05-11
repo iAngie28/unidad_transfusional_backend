@@ -1,0 +1,4 @@
+from .prueba_pretransfusional_pac_serializers import PruebaPretransfusionalPACSerializer
+from .pruebas_pretransf_hema_serializers import PruebasPretransfHemaSerializer
+from .transfusion_serializers import TransfusionSerializer
+from .reaccion_serializers import ReaccionSerializer

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: backend-transfusional
+    name: unidad-transfusional-backend
     runtime: python
     plan: free
     buildCommand: "./build.sh"

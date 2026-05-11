@@ -1,8 +1,9 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from rest_framework import status
-from apps.users.serializers.auth_serializers import UserSerializer
+from apps.users.serializers.user_serializers import UserSerializer
 from django.contrib.auth import authenticate
+
 
 class CustomLoginView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
@@ -13,6 +14,8 @@ class CustomLoginView(TokenObtainPairView):
                 username=request.data.get('username'),
                 password=request.data.get('password')
             )
+            if user is None:
+                raise ValueError("Credenciales invalidas")
             user_data = UserSerializer(user).data
             
             return Response({

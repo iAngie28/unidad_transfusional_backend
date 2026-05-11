@@ -40,8 +40,11 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'core',
     'apps.users',
-    'apps.pacientes',
+    'apps.admision',
+    'apps.inventario',
+    'apps.laboratorio',
     'corsheaders',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -149,6 +152,15 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
 CORS_ALLOWED_ORIGINS = [
     "https://unidad-transfusional-frontend.onrender.com",

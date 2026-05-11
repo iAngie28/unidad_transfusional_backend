@@ -1,0 +1,6 @@
+from .paciente_serializers import PacienteSerializer
+from .medico_serializers import MedicoSerializer
+from .solicitud_transfusion_serializers import SolicitudTransfusionSerializer
+from .consentimiento_informado_serializers import ConsentimientoInformadoSerializer
+from .citacion_donante_serializers import CitacionDonanteSerializer
+from .pago_serializers import PagoSerializer
