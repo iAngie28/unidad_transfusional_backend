@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from apps.admision.views import (
     CitacionDonanteViewSet,
     ConsentimientoInformadoViewSet,
+    EspecialidadViewSet,
     MedicoViewSet,
     PacienteViewSet,
     PagoViewSet,
@@ -11,6 +12,7 @@ from apps.admision.views import (
 )
 
 router = DefaultRouter()
+router.register(r"especialidades", EspecialidadViewSet, basename="especialidades")
 router.register(r"pacientes", PacienteViewSet, basename="pacientes")
 router.register(r"medicos", MedicoViewSet, basename="medicos")
 router.register(r"solicitudes-transfusion", SolicitudTransfusionViewSet, basename="solicitudes-transfusion")

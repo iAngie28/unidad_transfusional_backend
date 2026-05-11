@@ -1,3 +1,4 @@
+from .especialidad import Especialidad
 from .paciente import Paciente
 from .medico import Medico
 from .solicitud_transfusion import SolicitudTransfusion

@@ -7,6 +7,7 @@ from django.utils import timezone
 from apps.admision.models import (
     CitacionDonante,
     ConsentimientoInformado,
+    Especialidad,
     Medico,
     Paciente,
     Pago,
@@ -165,11 +166,27 @@ class Command(BaseCommand):
             },
         ]
 
+        especialidades = {}
+        for nombre in {data["especialidad"] for data in medicos_data}:
+            especialidad, _ = Especialidad.objects.update_or_create(
+                nombre=nombre,
+                defaults={
+                    "descripcion": f"Especialidad de {nombre.lower()}",
+                    "created_by": bio,
+                },
+            )
+            especialidades[nombre] = especialidad
+
         medicos = {}
         for data in medicos_data:
+            nombre_especialidad = data.pop("especialidad")
             medico, _ = Medico.objects.update_or_create(
                 matricula_profesional=data["matricula_profesional"],
-                defaults={**data, "created_by": bio},
+                defaults={
+                    **data,
+                    "especialidad": especialidades[nombre_especialidad],
+                    "created_by": bio,
+                },
             )
             medicos[medico.matricula_profesional] = medico
 

@@ -8,10 +8,11 @@ from core.views import AuditoriaViewSetMixin, SearchableQuerySetMixin
 class MedicoViewSet(AuditoriaViewSetMixin, SearchableQuerySetMixin, viewsets.ModelViewSet):
     model = Medico
     serializer_class = MedicoSerializer
+    select_related_fields = ("especialidad",)
     search_fields = (
         "nombre",
         "apellido_paterno",
         "apellido_materno",
-        "especialidad",
+        "especialidad__nombre",
         "matricula_profesional",
     )

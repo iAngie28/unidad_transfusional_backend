@@ -3,11 +3,18 @@ from django.contrib import admin
 from apps.admision.models import (
     CitacionDonante,
     ConsentimientoInformado,
+    Especialidad,
     Medico,
     Paciente,
     Pago,
     SolicitudTransfusion,
 )
+
+
+@admin.register(Especialidad)
+class EspecialidadAdmin(admin.ModelAdmin):
+    list_display = ("id", "nombre", "descripcion")
+    search_fields = ("nombre", "descripcion")
 
 
 @admin.register(Paciente)
@@ -36,8 +43,15 @@ class MedicoAdmin(admin.ModelAdmin):
         "especialidad",
         "matricula_profesional",
     )
-    search_fields = ("nombre", "apellido_paterno", "apellido_materno", "especialidad", "matricula_profesional")
+    search_fields = (
+        "nombre",
+        "apellido_paterno",
+        "apellido_materno",
+        "especialidad__nombre",
+        "matricula_profesional",
+    )
     list_filter = ("especialidad",)
+    autocomplete_fields = ("especialidad",)
 
 
 @admin.register(SolicitudTransfusion)
