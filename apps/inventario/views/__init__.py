@@ -1,0 +1,3 @@
+from .hemocomponente_views import HemocomponenteViewSet
+from .trazabilidad_views import TrazabilidadViewSet
+from .descarte_views import DescarteViewSet
