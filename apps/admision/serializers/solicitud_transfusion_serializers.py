@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from apps.admision.models import Medico, Paciente, SolicitudTransfusion
+from apps.admision.services import SolicitudTransfusionValidationService
 from core.serializers import BaseModelSerializer
 
 User = get_user_model()
@@ -21,12 +22,16 @@ class SolicitudTransfusionSerializer(BaseModelSerializer):
             "nro",
             "fecha",
             "hora",
-            "edad_paciente",
+            "edad_valor",
+            "edad_unidad",
+            "fecha_nacimiento",
             "hto",
             "hb",
             "grupo",
             "hemocomponente",
             "cantidad",
+            "fraccionado",
+            "ml",
             "tipo_urgencia",
             "diagnostico",
             "id_user",
@@ -39,6 +44,11 @@ class SolicitudTransfusionSerializer(BaseModelSerializer):
             "updated_at",
             "created_by",
         ]
+        extra_kwargs = {
+            "fecha_nacimiento": {"required": False, "allow_null": True},
+            "ml": {"required": False, "allow_null": True},
+        }
+        service_class = SolicitudTransfusionValidationService
         read_only_fields = [
             "user_username",
             "paciente_nombre",

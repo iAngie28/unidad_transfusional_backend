@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from apps.admision.models import Paciente, SolicitudTransfusion
 from apps.laboratorio.models import PruebaPretransfusionalPAC
+from apps.laboratorio.services import PruebaPretransfusionalPACValidationService
 from core.serializers import BaseModelSerializer
 
 User = get_user_model()
@@ -19,6 +20,7 @@ class PruebaPretransfusionalPACSerializer(BaseModelSerializer):
 
     class Meta:
         model = PruebaPretransfusionalPAC
+        service_class = PruebaPretransfusionalPACValidationService
         fields = [
             "id",
             "fecha_hora",

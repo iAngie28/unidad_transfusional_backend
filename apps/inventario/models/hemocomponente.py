@@ -5,11 +5,12 @@ from core.models import AuditoriaMixin
 
 class Hemocomponente(AuditoriaMixin):
     TIPO_CHOICES = [
-        ("SANGRE_TOTAL", "Sangre total"),
-        ("GLOBULOS_ROJOS", "Globulos rojos"),
-        ("PLASMA", "Plasma"),
-        ("PLAQUETAS", "Plaquetas"),
-        ("CRIOPRECIPITADO", "Crioprecipitado"),
+        ("PLASMA_FRESCO_CONGELADO", "Plasma fresco congelado"),
+        ("CRIOPRECIPITADOS", "Crioprecipitados"),
+        ("CONCENTRADO_PLAQUETAS", "Concentrado de plaquetas"),
+        ("PAQUETE_GLOBULAR", "Paquete globular"),
+        ("CONCENTRADO_HELITROCITO_PLAQUETAS", "Concentrado de helitrocito y plaquetas por aféresis"),
+        ("GLOBULO_ROJO_LAVADO", "Globulo rojo lavado"),
     ]
     GRUPO_CHOICES = [
         ("A+", "A+"),
@@ -32,7 +33,7 @@ class Hemocomponente(AuditoriaMixin):
 
     nro_bolsa = models.CharField(max_length=50, primary_key=True)
     nro_tubuladura = models.CharField(max_length=50, unique=True)
-    tipo = models.CharField(max_length=30, choices=TIPO_CHOICES)
+    tipo = models.CharField(max_length=50, choices=TIPO_CHOICES)
     grupo_sanguineo = models.CharField(max_length=3, choices=GRUPO_CHOICES)
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default="DISPONIBLE")
     fecha_ingreso = models.DateTimeField()

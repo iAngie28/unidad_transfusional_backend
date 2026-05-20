@@ -1,1 +1,5 @@
-from .paciente_service import PacienteService
+from .citacion_donante_service import CitacionDonanteValidationService
+from .consentimiento_informado_service import ConsentimientoInformadoValidationService
+from .medico_service import MedicoValidationService
+from .paciente_service import PacienteService, PacienteValidationService
+from .solicitud_transfusion_service import SolicitudTransfusionValidationService

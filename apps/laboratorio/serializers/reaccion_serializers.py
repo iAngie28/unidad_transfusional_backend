@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.laboratorio.models import Reaccion, Transfusion
+from apps.laboratorio.services import ReaccionValidationService
 from core.serializers import BaseModelSerializer
 
 
@@ -12,6 +13,7 @@ class ReaccionSerializer(BaseModelSerializer):
 
     class Meta:
         model = Reaccion
+        service_class = ReaccionValidationService
         fields = [
             "id",
             "id_transfusion",

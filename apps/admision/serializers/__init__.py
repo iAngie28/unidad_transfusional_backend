@@ -1,4 +1,5 @@
 from .especialidad_serializers import EspecialidadSerializer
+from .servicio_serializers import ServicioSerializer
 from .paciente_serializers import PacienteSerializer
 from .medico_serializers import MedicoSerializer
 from .solicitud_transfusion_serializers import SolicitudTransfusionSerializer

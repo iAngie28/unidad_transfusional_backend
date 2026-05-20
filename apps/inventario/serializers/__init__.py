@@ -1,3 +1,4 @@
 from .hemocomponente_serializers import HemocomponenteSerializer
+from .hospital_serializers import HospitalSerializer
 from .trazabilidad_serializers import TrazabilidadSerializer
 from .descarte_serializers import DescarteSerializer

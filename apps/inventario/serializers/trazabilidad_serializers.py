@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from apps.inventario.models import Hemocomponente, Trazabilidad
+from apps.inventario.services import TrazabilidadValidationService
 from core.serializers import BaseModelSerializer
 
 User = get_user_model()
@@ -17,6 +18,7 @@ class TrazabilidadSerializer(BaseModelSerializer):
 
     class Meta:
         model = Trazabilidad
+        service_class = TrazabilidadValidationService
         fields = [
             "id",
             "nro_bolsa",

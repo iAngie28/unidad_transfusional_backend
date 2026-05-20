@@ -5,12 +5,23 @@ from core.models import AuditoriaMixin
 
 
 class SolicitudTransfusion(AuditoriaMixin):
+    EDAD_DIAS = "DIAS"
+    EDAD_MESES = "MESES"
+    EDAD_ANOS = "ANOS"
+
+    EDAD_UNIDAD_CHOICES = [
+        (EDAD_DIAS, "Dias"),
+        (EDAD_MESES, "Meses"),
+        (EDAD_ANOS, "Anos"),
+    ]
+
     HEMOCOMPONENTE_CHOICES = [
-        ("SANGRE_TOTAL", "Sangre total"),
-        ("GLOBULOS_ROJOS", "Globulos rojos"),
-        ("PLASMA", "Plasma"),
-        ("PLAQUETAS", "Plaquetas"),
-        ("CRIOPRECIPITADO", "Crioprecipitado"),
+        ("PLASMA_FRESCO_CONGELADO", "Plasma fresco congelado"),
+        ("CRIOPRECIPITADOS", "Crioprecipitados"),
+        ("CONCENTRADO_PLAQUETAS", "Concentrado de plaquetas"),
+        ("PAQUETE_GLOBULAR", "Paquete globular"),
+        ("CONCENTRADO_HELITROCITO_PLAQUETAS", "Concentrado de helitrocito y plaquetas por aféresis"),
+        ("GLOBULO_ROJO_LAVADO", "Globulo rojo lavado"),
     ]
     URGENCIA_CHOICES = [
         ("RUTINA", "Rutina"),
@@ -31,12 +42,16 @@ class SolicitudTransfusion(AuditoriaMixin):
     nro = models.CharField(max_length=30, primary_key=True)
     fecha = models.DateField()
     hora = models.TimeField()
-    edad_paciente = models.PositiveSmallIntegerField()
+    edad_valor = models.PositiveSmallIntegerField()
+    edad_unidad = models.CharField(max_length=5, choices=EDAD_UNIDAD_CHOICES, default=EDAD_ANOS)
+    fecha_nacimiento = models.DateField(blank=True, null=True)
     hto = models.FloatField()
     hb = models.FloatField()
     grupo = models.CharField(max_length=3, choices=GRUPO_CHOICES)
-    hemocomponente = models.CharField(max_length=30, choices=HEMOCOMPONENTE_CHOICES)
+    hemocomponente = models.CharField(max_length=50, choices=HEMOCOMPONENTE_CHOICES)
     cantidad = models.PositiveSmallIntegerField()
+    fraccionado = models.BooleanField(default=False)
+    ml = models.PositiveSmallIntegerField(blank=True, null=True)
     tipo_urgencia = models.CharField(max_length=20, choices=URGENCIA_CHOICES)
     diagnostico = models.TextField()
     user = models.ForeignKey(

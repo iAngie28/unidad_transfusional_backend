@@ -8,14 +8,14 @@ from core.views import AuditoriaViewSetMixin, SearchableQuerySetMixin
 class TransfusionViewSet(AuditoriaViewSetMixin, SearchableQuerySetMixin, viewsets.ModelViewSet):
     model = Transfusion
     serializer_class = TransfusionSerializer
-    select_related_fields = ("hemocomponente", "paciente", "user")
+    select_related_fields = ("hemocomponente", "paciente", "user", "servicio")
     search_fields = (
         "hemocomponente__nro_bolsa",
         "paciente__ci",
         "paciente__nombre",
         "paciente__apellido_paterno",
         "user__username",
-        "servicio",
+        "servicio__nombre",
         "diagnostico",
         "grupo_cabecera_h",
     )

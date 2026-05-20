@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.admision.models import Especialidad, Medico
+from apps.admision.services import MedicoValidationService
 from core.serializers import BaseModelSerializer
 
 
@@ -23,3 +24,7 @@ class MedicoSerializer(BaseModelSerializer):
             "created_by",
         ]
         read_only_fields = ["id", "especialidad_nombre", "created_at", "updated_at", "created_by"]
+        extra_kwargs = {
+            "matricula_profesional": {"validators": []},
+        }
+        service_class = MedicoValidationService

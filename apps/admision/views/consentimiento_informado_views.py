@@ -8,10 +8,10 @@ from core.views import AuditoriaViewSetMixin, SearchableQuerySetMixin
 class ConsentimientoInformadoViewSet(AuditoriaViewSetMixin, SearchableQuerySetMixin, viewsets.ModelViewSet):
     model = ConsentimientoInformado
     serializer_class = ConsentimientoInformadoSerializer
-    select_related_fields = ("solicitud",)
+    select_related_fields = ("solicitud", "servicio")
     search_fields = (
         "solicitud__nro",
-        "servicio",
+        "servicio__nombre",
         "nombre_familiar",
         "apellido_paterno_familiar",
         "ci",

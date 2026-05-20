@@ -5,17 +5,20 @@ from core.models import AuditoriaMixin
 
 
 class PruebaPretransfusionalPAC(AuditoriaMixin):
-    REACTIVO_CHOICES = [
+    POSITIVO_NEGATIVO_CHOICES = [
         ("POSITIVO", "Positivo"),
         ("NEGATIVO", "Negativo"),
-        ("NO_REALIZADO", "No realizado"),
     ]
-    RESULTADO_CHOICES = [
-        ("APTO", "Apto"),
-        ("NO_APTO", "No apto"),
-        ("PENDIENTE", "Pendiente"),
+    GRUPO_CHOICES = [
+        ("A+", "A+"),
+        ("A-", "A-"),
+        ("B+", "B+"),
+        ("B-", "B-"),
+        ("AB+", "AB+"),
+        ("AB-", "AB-"),
+        ("O+", "O+"),
+        ("O-", "O-"),
     ]
-
     fecha_hora = models.DateTimeField()
     paciente = models.ForeignKey(
         "admision.Paciente",
@@ -35,19 +38,19 @@ class PruebaPretransfusionalPAC(AuditoriaMixin):
         related_name="pruebas_pretransfusionales_pac",
         db_column="nro_solicitud",
     )
-    anti_a = models.CharField(max_length=20, choices=REACTIVO_CHOICES)
-    anti_b = models.CharField(max_length=20, choices=REACTIVO_CHOICES)
-    anti_ab = models.CharField(max_length=20, choices=REACTIVO_CHOICES)
-    anti_d = models.CharField(max_length=20, choices=REACTIVO_CHOICES)
-    control_rhesus = models.CharField(max_length=100)
-    alfa = models.CharField(max_length=100)
-    beta = models.CharField(max_length=100)
-    o = models.CharField(max_length=100)
-    fenotipo = models.CharField(max_length=100)
+    anti_a = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    anti_b = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    anti_ab = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    anti_d = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    control_rhesus = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    alfa = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    beta = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    o = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    fenotipo = models.CharField(max_length=3, choices=GRUPO_CHOICES)
     hto = models.FloatField()
     hb = models.FloatField()
-    coombs_directo = models.CharField(max_length=100)
-    resultado = models.CharField(max_length=20, choices=RESULTADO_CHOICES)
+    coombs_directo = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    resultado = models.CharField(max_length=100)
 
     class Meta:
         app_label = "laboratorio"

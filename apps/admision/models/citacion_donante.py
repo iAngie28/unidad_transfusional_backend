@@ -5,6 +5,25 @@ from core.models import AuditoriaMixin
 
 
 class CitacionDonante(AuditoriaMixin):
+    GRUPO_CHOICES = [
+        ("A+", "A+"),
+        ("A-", "A-"),
+        ("B+", "B+"),
+        ("B-", "B-"),
+        ("AB+", "AB+"),
+        ("AB-", "AB-"),
+        ("O+", "O+"),
+        ("O-", "O-"),
+    ]
+    HEMOCOMPONENTE_CHOICES = [
+        ("PLASMA_FRESCO_CONGELADO", "Plasma fresco congelado"),
+        ("CRIOPRECIPITADOS", "Crioprecipitados"),
+        ("CONCENTRADO_PLAQUETAS", "Concentrado de plaquetas"),
+        ("PAQUETE_GLOBULAR", "Paquete globular"),
+        ("CONCENTRADO_HELITROCITO_PLAQUETAS", "Concentrado de helitrocito y plaquetas por aféresis"),
+        ("GLOBULO_ROJO_LAVADO", "Globulo rojo lavado"),
+    ]
+
     solicitud = models.ForeignKey(
         "admision.SolicitudTransfusion",
         on_delete=models.CASCADE,
@@ -18,13 +37,18 @@ class CitacionDonante(AuditoriaMixin):
         db_column="id_user",
     )
     fecha = models.DateField()
-    servicio = models.CharField(max_length=120)
+    servicio = models.ForeignKey(
+        "admision.Servicio",
+        on_delete=models.PROTECT,
+        related_name="citaciones_donante",
+        db_column="id_servicio",
+    )
     sala_cama = models.CharField(max_length=60, blank=True, null=True)
     cantidad = models.PositiveSmallIntegerField()
     codigo_donante = models.CharField(max_length=50, unique=True)
     hora = models.TimeField()
-    grupo_factor = models.CharField(max_length=5)
-    tipo = models.CharField(max_length=100)
+    grupo_factor = models.CharField(max_length=3, choices=GRUPO_CHOICES)
+    tipo = models.CharField(max_length=50, choices=HEMOCOMPONENTE_CHOICES)
 
     class Meta:
         app_label = "admision"

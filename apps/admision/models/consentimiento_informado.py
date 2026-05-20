@@ -11,7 +11,12 @@ class ConsentimientoInformado(AuditoriaMixin):
         db_column="nro_solicitud",
     )
     fecha = models.DateField()
-    servicio = models.CharField(max_length=120)
+    servicio = models.ForeignKey(
+        "admision.Servicio",
+        on_delete=models.PROTECT,
+        related_name="consentimientos",
+        db_column="id_servicio",
+    )
     nombre_familiar = models.CharField(max_length=100)
     apellido_paterno_familiar = models.CharField(max_length=100)
     apellido_materno_familiar = models.CharField(max_length=100, blank=True, null=True)

@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from apps.admision.models import CitacionDonante, SolicitudTransfusion
+from apps.admision.models import CitacionDonante, Servicio, SolicitudTransfusion
+from apps.admision.services import CitacionDonanteValidationService
 from core.serializers import BaseModelSerializer
 
 User = get_user_model()
@@ -13,7 +14,9 @@ class CitacionDonanteSerializer(BaseModelSerializer):
         queryset=SolicitudTransfusion.objects.all(),
     )
     id_user = serializers.PrimaryKeyRelatedField(source="user", queryset=User.objects.all())
+    id_servicio = serializers.PrimaryKeyRelatedField(source="servicio", queryset=Servicio.objects.all())
     user_username = serializers.CharField(source="user.username", read_only=True)
+    servicio_nombre = serializers.CharField(source="servicio.nombre", read_only=True)
 
     class Meta:
         model = CitacionDonante
@@ -23,7 +26,8 @@ class CitacionDonanteSerializer(BaseModelSerializer):
             "id_user",
             "user_username",
             "fecha",
-            "servicio",
+            "id_servicio",
+            "servicio_nombre",
             "sala_cama",
             "cantidad",
             "codigo_donante",
@@ -34,4 +38,5 @@ class CitacionDonanteSerializer(BaseModelSerializer):
             "updated_at",
             "created_by",
         ]
-        read_only_fields = ["id", "user_username", "created_at", "updated_at", "created_by"]
+        read_only_fields = ["id", "user_username", "servicio_nombre", "created_at", "updated_at", "created_by"]
+        service_class = CitacionDonanteValidationService

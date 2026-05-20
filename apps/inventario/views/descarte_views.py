@@ -10,11 +10,12 @@ from core.views import AuditoriaViewSetMixin, SearchableQuerySetMixin
 class DescarteViewSet(AuditoriaViewSetMixin, SearchableQuerySetMixin, viewsets.ModelViewSet):
     model = Descarte
     serializer_class = DescarteSerializer
-    select_related_fields = ("hemocomponente",)
+    select_related_fields = ("hemocomponente", "hospital")
     search_fields = (
         "hemocomponente__nro_bolsa",
         "tipo_accion",
         "motivo",
+        "hospital__nombre",
     )
 
     def create(self, request, *args, **kwargs):

@@ -26,10 +26,10 @@ class PruebasPretransfHemaAdmin(admin.ModelAdmin):
 
 @admin.register(Transfusion)
 class TransfusionAdmin(admin.ModelAdmin):
-    list_display = ("id", "paciente", "hemocomponente", "user", "servicio", "hora_inicio", "hora_fin", "fraccionado")
-    search_fields = ("paciente__ci", "paciente__nombre", "hemocomponente__nro_bolsa", "user__username", "servicio")
+    list_display = ("id", "paciente", "hemocomponente", "user", "servicio", "hora_inicio", "hora_fin", "fraccionado", "ml")
+    search_fields = ("paciente__ci", "paciente__nombre", "hemocomponente__nro_bolsa", "user__username", "servicio__nombre")
     list_filter = ("servicio", "fraccionado", "hora_inicio")
-    autocomplete_fields = ("paciente", "hemocomponente", "user")
+    autocomplete_fields = ("paciente", "hemocomponente", "user", "servicio")
 
 
 @admin.register(Reaccion)

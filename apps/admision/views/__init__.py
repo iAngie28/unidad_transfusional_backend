@@ -1,6 +1,7 @@
 from .citacion_donante_views import CitacionDonanteViewSet
 from .consentimiento_informado_views import ConsentimientoInformadoViewSet
 from .especialidad_views import EspecialidadViewSet
+from .servicio_views import ServicioViewSet
 from .medico_views import MedicoViewSet
 from .paciente_views import PacienteViewSet
 from .pago_views import PagoViewSet

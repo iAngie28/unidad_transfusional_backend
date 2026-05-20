@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.users.models import Rol, User
+from apps.users.services import UserValidationService
 from core.serializers import BaseModelSerializer
 
 
@@ -33,10 +34,12 @@ class UserSerializer(BaseModelSerializer):
         ]
         read_only_fields = ["id", "rol_nombre", "rol_descripcion", "role", "role_display"]
         extra_kwargs = {
+            "username": {"validators": []},
             "first_name": {"required": True, "allow_blank": False},
             "last_name": {"required": True, "allow_blank": False},
             "email": {"required": False, "allow_blank": True},
         }
+        service_class = UserValidationService
 
     def get_role(self, obj):
         return obj.rol.nombre if obj.rol else None

@@ -11,9 +11,10 @@ from apps.admision.models import (
     Medico,
     Paciente,
     Pago,
+    Servicio,
     SolicitudTransfusion,
 )
-from apps.inventario.models import Descarte, Hemocomponente, Trazabilidad
+from apps.inventario.models import Descarte, Hemocomponente, Hospital, Trazabilidad
 from apps.laboratorio.models import (
     PruebaPretransfusionalPAC,
     PruebasPretransfHema,
@@ -114,7 +115,9 @@ class Command(BaseCommand):
                 "nombre": "Carlos",
                 "apellido_paterno": "Gomez",
                 "apellido_materno": "Vargas",
-                "edad": 36,
+                "edad_valor": 36,
+                "edad_unidad": "ANOS",
+                "fecha_nacimiento": None,
                 "sexo": "M",
                 "historia_clinica": "HC-001",
                 "grupo_sanguineo": "A+",
@@ -124,7 +127,9 @@ class Command(BaseCommand):
                 "nombre": "Maria",
                 "apellido_paterno": "Rodriguez",
                 "apellido_materno": "Lopez",
-                "edad": 29,
+                "edad_valor": 29,
+                "edad_unidad": "ANOS",
+                "fecha_nacimiento": None,
                 "sexo": "F",
                 "historia_clinica": "HC-002",
                 "grupo_sanguineo": "O-",
@@ -134,7 +139,9 @@ class Command(BaseCommand):
                 "nombre": "Pedro",
                 "apellido_paterno": "Suarez",
                 "apellido_materno": "Molina",
-                "edad": 58,
+                "edad_valor": 58,
+                "edad_unidad": "ANOS",
+                "fecha_nacimiento": None,
                 "sexo": "M",
                 "historia_clinica": "HC-003",
                 "grupo_sanguineo": "B+",
@@ -148,6 +155,21 @@ class Command(BaseCommand):
                 defaults={**data, "created_by": bio},
             )
             pacientes[paciente.ci] = paciente
+
+        servicios_data = [
+            ("Medicina Interna", "Servicio hospitalario de medicina interna"),
+            ("Cirugia", "Servicio hospitalario de cirugia"),
+        ]
+        servicios = {}
+        for nombre, descripcion in servicios_data:
+            servicio, _ = Servicio.objects.update_or_create(
+                nombre=nombre,
+                defaults={
+                    "descripcion": descripcion,
+                    "created_by": bio,
+                },
+            )
+            servicios[nombre] = servicio
 
         medicos_data = [
             {
@@ -192,14 +214,16 @@ class Command(BaseCommand):
 
         solicitudes_data = [
             {
-                "nro": "SOL-001",
+                "nro": "1",
                 "fecha": now.date(),
                 "hora": hora_actual,
-                "edad_paciente": 36,
+                "edad_valor": 36,
+                "edad_unidad": "ANOS",
+                "fecha_nacimiento": None,
                 "hto": 28.5,
                 "hb": 8.7,
                 "grupo": "A+",
-                "hemocomponente": "GLOBULOS_ROJOS",
+                "hemocomponente": "PAQUETE_GLOBULAR",
                 "cantidad": 2,
                 "tipo_urgencia": "URGENTE",
                 "diagnostico": "Anemia severa",
@@ -208,14 +232,16 @@ class Command(BaseCommand):
                 "medico": medicos["MP-001"],
             },
             {
-                "nro": "SOL-002",
+                "nro": "2",
                 "fecha": (now - timedelta(days=1)).date(),
                 "hora": hora_menos_2,
-                "edad_paciente": 29,
+                "edad_valor": 29,
+                "edad_unidad": "ANOS",
+                "fecha_nacimiento": None,
                 "hto": 31.2,
                 "hb": 9.4,
                 "grupo": "O-",
-                "hemocomponente": "PLASMA",
+                "hemocomponente": "PLASMA_FRESCO_CONGELADO",
                 "cantidad": 1,
                 "tipo_urgencia": "RUTINA",
                 "diagnostico": "Preparacion preoperatoria",
@@ -234,11 +260,11 @@ class Command(BaseCommand):
             solicitudes[solicitud.nro] = solicitud
 
         ConsentimientoInformado.objects.update_or_create(
-            solicitud=solicitudes["SOL-001"],
+            solicitud=solicitudes["1"],
             ci="99887766",
             defaults={
                 "fecha": now.date(),
-                "servicio": "Medicina Interna",
+                "servicio": servicios["Medicina Interna"],
                 "nombre_familiar": "Rosa",
                 "apellido_paterno_familiar": "Gomez",
                 "apellido_materno_familiar": "Vargas",
@@ -247,11 +273,11 @@ class Command(BaseCommand):
             },
         )
         ConsentimientoInformado.objects.update_or_create(
-            solicitud=solicitudes["SOL-002"],
+            solicitud=solicitudes["2"],
             ci="88776655",
             defaults={
                 "fecha": (now - timedelta(days=1)).date(),
-                "servicio": "Cirugia",
+                "servicio": servicios["Cirugia"],
                 "nombre_familiar": "Andres",
                 "apellido_paterno_familiar": "Rodriguez",
                 "apellido_materno_familiar": "Lopez",
@@ -263,28 +289,28 @@ class Command(BaseCommand):
         citaciones = {}
         citaciones_data = [
             {
-                "codigo_donante": "DON-001",
-                "solicitud": solicitudes["SOL-001"],
+                "codigo_donante": "DON001",
+                "solicitud": solicitudes["1"],
                 "user": bio,
                 "fecha": now.date(),
-                "servicio": "Medicina Interna",
-                "sala_cama": "Sala 2 - Cama 4",
+                "servicio": servicios["Medicina Interna"],
+                "sala_cama": "Sala 2 Cama 4",
                 "cantidad": 2,
                 "hora": hora_actual,
                 "grupo_factor": "A+",
-                "tipo": "Reposicion",
+                "tipo": "PAQUETE_GLOBULAR",
             },
             {
-                "codigo_donante": "DON-002",
-                "solicitud": solicitudes["SOL-002"],
+                "codigo_donante": "DON002",
+                "solicitud": solicitudes["2"],
                 "user": bio,
                 "fecha": (now - timedelta(days=1)).date(),
-                "servicio": "Cirugia",
-                "sala_cama": "Sala 1 - Cama 8",
+                "servicio": servicios["Cirugia"],
+                "sala_cama": "Sala 1 Cama 8",
                 "cantidad": 1,
                 "hora": hora_menos_1,
                 "grupo_factor": "O-",
-                "tipo": "Programada",
+                "tipo": "PLASMA_FRESCO_CONGELADO",
             },
         ]
         for data in citaciones_data:
@@ -297,6 +323,7 @@ class Command(BaseCommand):
         return {
             "pacientes": pacientes,
             "medicos": medicos,
+            "servicios": servicios,
             "solicitudes": solicitudes,
             "citaciones": citaciones,
         }
@@ -311,7 +338,7 @@ class Command(BaseCommand):
             {
                 "nro_bolsa": "BOL-001",
                 "nro_tubuladura": "TUB-001",
-                "tipo": "GLOBULOS_ROJOS",
+                "tipo": "PAQUETE_GLOBULAR",
                 "grupo_sanguineo": "A+",
                 "estado": "TRANSFUNDIDO",
                 "fecha_ingreso": now - timedelta(days=3),
@@ -321,7 +348,7 @@ class Command(BaseCommand):
             {
                 "nro_bolsa": "BOL-002",
                 "nro_tubuladura": "TUB-002",
-                "tipo": "PLASMA",
+                "tipo": "PLASMA_FRESCO_CONGELADO",
                 "grupo_sanguineo": "O-",
                 "estado": "DISPONIBLE",
                 "fecha_ingreso": now - timedelta(days=2),
@@ -331,7 +358,7 @@ class Command(BaseCommand):
             {
                 "nro_bolsa": "BOL-003",
                 "nro_tubuladura": "TUB-003",
-                "tipo": "PLAQUETAS",
+                "tipo": "CONCENTRADO_PLAQUETAS",
                 "grupo_sanguineo": "B+",
                 "estado": "DESCARTADO",
                 "fecha_ingreso": now - timedelta(days=7),
@@ -347,6 +374,18 @@ class Command(BaseCommand):
                 defaults={**data, "created_by": bio},
             )
             bolsas[bolsa.nro_bolsa] = bolsa
+
+        hospitales_data = [
+            ("Hospital San Juan de Dios", "Hospital receptor para intercambio de hemocomponentes."),
+            ("Hospital Universitario Japones", "Hospital externo con convenio."),
+        ]
+        hospitales = {}
+        for nombre, descripcion in hospitales_data:
+            hospital, _ = Hospital.objects.update_or_create(
+                nombre=nombre,
+                defaults={"descripcion": descripcion, "created_by": bio},
+            )
+            hospitales[nombre] = hospital
 
         trazas_data = [
             ("BOL-001", "INGRESO", bio, now - timedelta(days=3)),
@@ -369,14 +408,15 @@ class Command(BaseCommand):
         Descarte.objects.update_or_create(
             hemocomponente=bolsas["BOL-003"],
             defaults={
-                "tipo_accion": "VENCIMIENTO",
+                "tipo_accion": "DESCARTE",
                 "motivo": "Bolsa vencida durante control de stock.",
+                "hospital": None,
                 "fecha_hora": now - timedelta(hours=6),
                 "created_by": bio,
             },
         )
 
-        return {"bolsas": bolsas}
+        return {"bolsas": bolsas, "hospitales": hospitales}
 
     def crear_laboratorio(self, usuarios, admision, inventario):
         self.stdout.write("- Creando datos de laboratorio...")
@@ -387,7 +427,7 @@ class Command(BaseCommand):
         bolsas = inventario["bolsas"]
 
         PruebaPretransfusionalPAC.objects.update_or_create(
-            solicitud=solicitudes["SOL-001"],
+            solicitud=solicitudes["1"],
             paciente=pacientes["12345678"],
             defaults={
                 "fecha_hora": now - timedelta(hours=5),
@@ -396,20 +436,20 @@ class Command(BaseCommand):
                 "anti_b": "NEGATIVO",
                 "anti_ab": "POSITIVO",
                 "anti_d": "POSITIVO",
-                "control_rhesus": "Valido",
-                "alfa": "Negativo",
-                "beta": "Positivo",
-                "o": "Negativo",
-                "fenotipo": "A Rh+",
+                "control_rhesus": "NEGATIVO",
+                "alfa": "NEGATIVO",
+                "beta": "POSITIVO",
+                "o": "NEGATIVO",
+                "fenotipo": "A+",
                 "hto": 28.5,
                 "hb": 8.7,
-                "coombs_directo": "Negativo",
+                "coombs_directo": "NEGATIVO",
                 "resultado": "APTO",
                 "created_by": bio,
             },
         )
         PruebaPretransfusionalPAC.objects.update_or_create(
-            solicitud=solicitudes["SOL-002"],
+            solicitud=solicitudes["2"],
             paciente=pacientes["87654321"],
             defaults={
                 "fecha_hora": now - timedelta(hours=3),
@@ -418,63 +458,63 @@ class Command(BaseCommand):
                 "anti_b": "NEGATIVO",
                 "anti_ab": "NEGATIVO",
                 "anti_d": "NEGATIVO",
-                "control_rhesus": "Valido",
-                "alfa": "Positivo",
-                "beta": "Positivo",
-                "o": "Negativo",
-                "fenotipo": "O Rh-",
+                "control_rhesus": "NEGATIVO",
+                "alfa": "POSITIVO",
+                "beta": "POSITIVO",
+                "o": "NEGATIVO",
+                "fenotipo": "O-",
                 "hto": 31.2,
                 "hb": 9.4,
-                "coombs_directo": "Negativo",
+                "coombs_directo": "NEGATIVO",
                 "resultado": "PENDIENTE",
                 "created_by": bio,
             },
         )
 
         PruebasPretransfHema.objects.update_or_create(
-            solicitud=solicitudes["SOL-001"],
+            solicitud=solicitudes["1"],
             hemocomponente=bolsas["BOL-001"],
             defaults={
                 "fecha": now - timedelta(hours=4),
-                "salina": "Compatible",
-                "albumina": "Compatible",
-                "liss": "Compatible",
-                "coombs": "Negativo",
-                "cruzada_mayor": "Compatible",
-                "cruzada_menor": "Compatible",
-                "hemolisis": "No",
+                "salina": "NEGATIVO",
+                "albumina": "NEGATIVO",
+                "liss": "NEGATIVO",
+                "coombs": "NEGATIVO",
+                "cruzada_mayor": "NEGATIVO",
+                "cruzada_menor": "NEGATIVO",
+                "hemolisis": "NEGATIVO",
                 "anti_a": "POSITIVO",
                 "anti_b": "NEGATIVO",
                 "anti_ab": "POSITIVO",
                 "anti_d": "POSITIVO",
-                "celula_a": "Negativo",
-                "celula_b": "Positivo",
-                "celula_o": "Negativo",
-                "fenotipo": "A Rh+",
+                "celula_a": "NEGATIVO",
+                "celula_b": "POSITIVO",
+                "celula_o": "NEGATIVO",
+                "fenotipo": "A+",
                 "user": bio,
                 "created_by": bio,
             },
         )
         PruebasPretransfHema.objects.update_or_create(
-            solicitud=solicitudes["SOL-002"],
+            solicitud=solicitudes["2"],
             hemocomponente=bolsas["BOL-002"],
             defaults={
                 "fecha": now - timedelta(hours=2),
-                "salina": "Pendiente",
-                "albumina": "Pendiente",
-                "liss": "Pendiente",
-                "coombs": "No realizado",
-                "cruzada_mayor": "Pendiente",
-                "cruzada_menor": "Pendiente",
-                "hemolisis": "No realizado",
-                "anti_a": "NO_REALIZADO",
-                "anti_b": "NO_REALIZADO",
-                "anti_ab": "NO_REALIZADO",
-                "anti_d": "NO_REALIZADO",
-                "celula_a": "No realizado",
-                "celula_b": "No realizado",
-                "celula_o": "No realizado",
-                "fenotipo": "Pendiente",
+                "salina": "NEGATIVO",
+                "albumina": "NEGATIVO",
+                "liss": "NEGATIVO",
+                "coombs": "NEGATIVO",
+                "cruzada_mayor": "NEGATIVO",
+                "cruzada_menor": "NEGATIVO",
+                "hemolisis": "NEGATIVO",
+                "anti_a": "NEGATIVO",
+                "anti_b": "NEGATIVO",
+                "anti_ab": "NEGATIVO",
+                "anti_d": "NEGATIVO",
+                "celula_a": "NEGATIVO",
+                "celula_b": "NEGATIVO",
+                "celula_o": "NEGATIVO",
+                "fenotipo": "O-",
                 "user": bio,
                 "created_by": bio,
             },
@@ -484,13 +524,14 @@ class Command(BaseCommand):
             hemocomponente=bolsas["BOL-001"],
             paciente=pacientes["12345678"],
             defaults={
-                "servicio": "Medicina Interna",
+                "servicio": admision["servicios"]["Medicina Interna"],
                 "diagnostico": "Anemia severa",
                 "ate_trans_alerg": False,
                 "grupo_cabecera_h": "A+",
                 "hora_inicio": now - timedelta(hours=3),
                 "hora_fin": now - timedelta(hours=1),
                 "fraccionado": False,
+                "ml": 1000,
                 "user": bio,
                 "created_by": bio,
             },
@@ -514,7 +555,7 @@ class Command(BaseCommand):
         transfusion = laboratorio["transfusion"]
 
         Pago.objects.update_or_create(
-            citacion=citaciones["DON-001"],
+            citacion=citaciones["DON001"],
             defaults={
                 "estado": "EXENTO",
                 "es_sus": True,
@@ -523,7 +564,7 @@ class Command(BaseCommand):
             },
         )
         Pago.objects.update_or_create(
-            citacion=citaciones["DON-002"],
+            citacion=citaciones["DON002"],
             defaults={
                 "estado": "PENDIENTE",
                 "es_sus": False,

@@ -5,13 +5,30 @@ from core.models import AuditoriaMixin
 
 
 class Transfusion(AuditoriaMixin):
-    servicio = models.CharField(max_length=120)
+    GRUPO_CHOICES = [
+        ("A+", "A+"),
+        ("A-", "A-"),
+        ("B+", "B+"),
+        ("B-", "B-"),
+        ("AB+", "AB+"),
+        ("AB-", "AB-"),
+        ("O+", "O+"),
+        ("O-", "O-"),
+    ]
+
+    servicio = models.ForeignKey(
+        "admision.Servicio",
+        on_delete=models.PROTECT,
+        related_name="transfusiones",
+        db_column="id_servicio",
+    )
     diagnostico = models.TextField()
     ate_trans_alerg = models.BooleanField(default=False)
-    grupo_cabecera_h = models.CharField(max_length=20)
+    grupo_cabecera_h = models.CharField(max_length=3, choices=GRUPO_CHOICES)
     hora_inicio = models.DateTimeField()
     hora_fin = models.DateTimeField(blank=True, null=True)
     fraccionado = models.BooleanField(default=False)
+    ml = models.PositiveSmallIntegerField(default=1000)
     hemocomponente = models.ForeignKey(
         "inventario.Hemocomponente",
         on_delete=models.PROTECT,

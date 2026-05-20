@@ -4,6 +4,7 @@ from rest_framework import serializers
 from apps.admision.models import SolicitudTransfusion
 from apps.inventario.models import Hemocomponente
 from apps.laboratorio.models import PruebasPretransfHema
+from apps.laboratorio.services import PruebasPretransfHemaValidationService
 from core.serializers import BaseModelSerializer
 
 User = get_user_model()
@@ -23,6 +24,7 @@ class PruebasPretransfHemaSerializer(BaseModelSerializer):
 
     class Meta:
         model = PruebasPretransfHema
+        service_class = PruebasPretransfHemaValidationService
         fields = [
             "id",
             "fecha",

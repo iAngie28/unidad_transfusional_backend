@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.inventario.models import Descarte, Hemocomponente, Trazabilidad
+from apps.inventario.models import Descarte, Hemocomponente, Hospital, Trazabilidad
 
 
 @admin.register(Hemocomponente)
@@ -29,7 +29,13 @@ class TrazabilidadAdmin(admin.ModelAdmin):
 
 @admin.register(Descarte)
 class DescarteAdmin(admin.ModelAdmin):
-    list_display = ("id", "hemocomponente", "tipo_accion", "fecha_hora")
-    search_fields = ("hemocomponente__nro_bolsa", "tipo_accion", "motivo")
+    list_display = ("id", "hemocomponente", "tipo_accion", "hospital", "fecha_hora")
+    search_fields = ("hemocomponente__nro_bolsa", "tipo_accion", "motivo", "hospital__nombre")
     list_filter = ("tipo_accion", "fecha_hora")
-    autocomplete_fields = ("hemocomponente",)
+    autocomplete_fields = ("hemocomponente", "hospital")
+
+
+@admin.register(Hospital)
+class HospitalAdmin(admin.ModelAdmin):
+    list_display = ("id", "nombre", "descripcion")
+    search_fields = ("nombre", "descripcion")

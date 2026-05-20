@@ -8,11 +8,13 @@ from apps.admision.views import (
     MedicoViewSet,
     PacienteViewSet,
     PagoViewSet,
+    ServicioViewSet,
     SolicitudTransfusionViewSet,
 )
 
 router = DefaultRouter()
 router.register(r"especialidades", EspecialidadViewSet, basename="especialidades")
+router.register(r"servicios", ServicioViewSet, basename="servicios")
 router.register(r"pacientes", PacienteViewSet, basename="pacientes")
 router.register(r"medicos", MedicoViewSet, basename="medicos")
 router.register(r"solicitudes-transfusion", SolicitudTransfusionViewSet, basename="solicitudes-transfusion")

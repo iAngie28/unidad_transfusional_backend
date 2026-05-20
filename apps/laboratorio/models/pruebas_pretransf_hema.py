@@ -5,28 +5,37 @@ from core.models import AuditoriaMixin
 
 
 class PruebasPretransfHema(AuditoriaMixin):
-    RESULTADO_CHOICES = [
+    POSITIVO_NEGATIVO_CHOICES = [
         ("POSITIVO", "Positivo"),
         ("NEGATIVO", "Negativo"),
-        ("NO_REALIZADO", "No realizado"),
+    ]
+    GRUPO_CHOICES = [
+        ("A+", "A+"),
+        ("A-", "A-"),
+        ("B+", "B+"),
+        ("B-", "B-"),
+        ("AB+", "AB+"),
+        ("AB-", "AB-"),
+        ("O+", "O+"),
+        ("O-", "O-"),
     ]
 
     fecha = models.DateTimeField()
-    salina = models.CharField(max_length=100)
-    albumina = models.CharField(max_length=100)
-    liss = models.CharField(max_length=100)
-    coombs = models.CharField(max_length=100)
-    cruzada_mayor = models.CharField(max_length=100)
-    cruzada_menor = models.CharField(max_length=100)
-    hemolisis = models.CharField(max_length=100)
-    anti_a = models.CharField(max_length=20, choices=RESULTADO_CHOICES)
-    anti_b = models.CharField(max_length=20, choices=RESULTADO_CHOICES)
-    anti_ab = models.CharField(max_length=20, choices=RESULTADO_CHOICES)
-    anti_d = models.CharField(max_length=20, choices=RESULTADO_CHOICES)
-    celula_a = models.CharField(max_length=100)
-    celula_b = models.CharField(max_length=100)
-    celula_o = models.CharField(max_length=100)
-    fenotipo = models.CharField(max_length=100)
+    salina = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    albumina = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    liss = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    coombs = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    cruzada_mayor = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    cruzada_menor = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    hemolisis = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    anti_a = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    anti_b = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    anti_ab = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    anti_d = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    celula_a = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    celula_b = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    celula_o = models.CharField(max_length=20, choices=POSITIVO_NEGATIVO_CHOICES)
+    fenotipo = models.CharField(max_length=3, choices=GRUPO_CHOICES)
     hemocomponente = models.ForeignKey(
         "inventario.Hemocomponente",
         on_delete=models.PROTECT,

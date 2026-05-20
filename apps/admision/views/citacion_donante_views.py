@@ -10,11 +10,11 @@ from core.views import AuditoriaViewSetMixin, SearchableQuerySetMixin
 class CitacionDonanteViewSet(AuditoriaViewSetMixin, SearchableQuerySetMixin, viewsets.ModelViewSet):
     model = CitacionDonante
     serializer_class = CitacionDonanteSerializer
-    select_related_fields = ("solicitud", "user")
+    select_related_fields = ("solicitud", "servicio", "user")
     search_fields = (
         "solicitud__nro",
         "codigo_donante",
-        "servicio",
+        "servicio__nombre",
         "grupo_factor",
         "tipo",
     )
@@ -27,4 +27,3 @@ class CitacionDonanteViewSet(AuditoriaViewSetMixin, SearchableQuerySetMixin, vie
                 {"error": "No se puede eliminar esta citación porque tiene pagos u otros registros asociados."},
                 status=status.HTTP_400_BAD_REQUEST
             )
-

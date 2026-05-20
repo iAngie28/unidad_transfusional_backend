@@ -4,11 +4,13 @@ from rest_framework.routers import DefaultRouter
 from apps.inventario.views import (
     DescarteViewSet,
     HemocomponenteViewSet,
+    HospitalViewSet,
     TrazabilidadViewSet,
 )
 
 router = DefaultRouter()
 router.register(r"hemocomponentes", HemocomponenteViewSet, basename="hemocomponentes")
+router.register(r"hospitales", HospitalViewSet, basename="hospitales")
 router.register(r"trazabilidades", TrazabilidadViewSet, basename="trazabilidades")
 router.register(r"descartes", DescarteViewSet, basename="descartes")
 
