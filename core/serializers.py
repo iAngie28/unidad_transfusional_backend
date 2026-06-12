@@ -39,4 +39,21 @@ class BaseModelSerializer(ServiceValidationMixin, serializers.ModelSerializer):
     Serializador base del que heredarán todos los modelos del sistema.
     Aquí puedes agregar lógica global en el futuro.
     """
-    pass
+    created_by_name = serializers.SerializerMethodField()
+    updated_by_name = serializers.SerializerMethodField()
+
+    def _get_user_full_name(self, user):
+        if not user:
+            return None
+        materno = f" {user.apellido_materno}" if getattr(user, 'apellido_materno', None) else ""
+        return f"{user.first_name} {user.last_name}{materno}".strip()
+
+    def get_created_by_name(self, obj):
+        if hasattr(obj, 'created_by'):
+            return self._get_user_full_name(obj.created_by)
+        return None
+
+    def get_updated_by_name(self, obj):
+        if hasattr(obj, 'updated_by'):
+            return self._get_user_full_name(obj.updated_by)
+        return None

@@ -1,9 +1,11 @@
 from django.db.models import Q
 from rest_framework import permissions
 
+from core.permissions import RoleBasedPermission
+
 
 class AuthenticatedViewSetMixin:
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, RoleBasedPermission]
 
 
 class AuditoriaViewSetMixin(AuthenticatedViewSetMixin):

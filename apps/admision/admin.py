@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from apps.admision.models import (
     CitacionDonante,
+    CodigoDonante,
     ConsentimientoInformado,
     Especialidad,
     Medico,
@@ -105,7 +106,6 @@ class CitacionDonanteAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "solicitud",
-        "codigo_donante",
         "fecha",
         "hora",
         "servicio",
@@ -115,13 +115,20 @@ class CitacionDonanteAdmin(admin.ModelAdmin):
         "user",
     )
     list_filter = ("fecha", "servicio", "grupo_factor", "tipo")
-    search_fields = ("solicitud__nro", "codigo_donante", "servicio__nombre", "grupo_factor", "tipo")
+    search_fields = ("solicitud__nro", "servicio__nombre", "grupo_factor", "tipo", "codigos_donante__codigo")
     autocomplete_fields = ("solicitud", "servicio", "user")
 
 
 @admin.register(Pago)
 class PagoAdmin(admin.ModelAdmin):
     list_display = ("id", "estado", "es_sus", "citacion", "transfusion", "created_at")
-    search_fields = ("citacion__codigo_donante", "citacion__solicitud__nro", "estado")
+    search_fields = ("citacion__solicitud__nro", "estado")
     list_filter = ("estado", "es_sus")
     autocomplete_fields = ("citacion", "transfusion")
+
+
+@admin.register(CodigoDonante)
+class CodigoDonanteAdmin(admin.ModelAdmin):
+    list_display = ("id", "codigo", "citacion", "created_at")
+    search_fields = ("codigo", "citacion__solicitud__nro")
+    autocomplete_fields = ("citacion",)

@@ -16,3 +16,4 @@ class PacienteViewSet(AuditoriaViewSetMixin, SearchableQuerySetMixin, viewsets.M
         "historia_clinica",
         "grupo_sanguineo",
     )
+    filterset_fields = ["ci", "historia_clinica"]

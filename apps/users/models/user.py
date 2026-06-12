@@ -25,3 +25,20 @@ class User(AbstractUser):
     def __str__(self):
         rol = self.rol.nombre if self.rol else "Sin rol"
         return f"{self.username} ({rol})"
+
+    def get_user_permissions(self, obj=None):
+        if not self.rol:
+            return set()
+        return {f"{p.content_type.app_label}.{p.codename}" for p in self.rol.permisos.select_related("content_type")}
+
+    def has_perm(self, perm, obj=None):
+        if self.is_active and self.is_superuser:
+            return True
+        return perm in self.get_user_permissions(obj)
+
+    def has_module_perms(self, app_label):
+        if self.is_active and self.is_superuser:
+            return True
+        if not self.rol:
+            return False
+        return any(p.content_type.app_label == app_label for p in self.rol.permisos.select_related("content_type"))

@@ -5,4 +5,5 @@ from .medico import Medico
 from .solicitud_transfusion import SolicitudTransfusion
 from .consentimiento_informado import ConsentimientoInformado
 from .citacion_donante import CitacionDonante
+from .codigo_donante import CodigoDonante
 from .pago import Pago

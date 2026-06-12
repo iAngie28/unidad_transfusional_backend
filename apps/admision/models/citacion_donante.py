@@ -45,16 +45,16 @@ class CitacionDonante(AuditoriaMixin):
     )
     sala_cama = models.CharField(max_length=60, blank=True, null=True)
     cantidad = models.PositiveSmallIntegerField()
-    codigo_donante = models.CharField(max_length=50, unique=True)
+
     hora = models.TimeField()
     grupo_factor = models.CharField(max_length=3, choices=GRUPO_CHOICES)
     tipo = models.CharField(max_length=50, choices=HEMOCOMPONENTE_CHOICES)
 
     class Meta:
         app_label = "admision"
-        ordering = ["-fecha", "-hora", "codigo_donante"]
+        ordering = ["-fecha", "-hora"]
         verbose_name = "Citacion de donante"
         verbose_name_plural = "Citaciones de donantes"
 
     def __str__(self):
-        return f"Citacion {self.codigo_donante} - {self.solicitud_id}"
+        return f"Citacion {self.id} - Solicitud {self.solicitud_id}"

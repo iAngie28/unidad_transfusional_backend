@@ -58,8 +58,8 @@ class PruebasPretransfHema(AuditoriaMixin):
     class Meta:
         app_label = "laboratorio"
         ordering = ["-fecha", "id"]
-        verbose_name = "Prueba pretransfusional hema"
-        verbose_name_plural = "Pruebas pretransfusionales hema"
+        verbose_name = "Prueba pretransfusional hemocomponente"
+        verbose_name_plural = "Pruebas pretransfusionales hemocomponente"
 
     def __str__(self):
         return f"Hema {self.id} - {self.hemocomponente_id}"

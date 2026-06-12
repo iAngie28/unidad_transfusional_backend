@@ -55,8 +55,8 @@ class PruebaPretransfusionalPAC(AuditoriaMixin):
     class Meta:
         app_label = "laboratorio"
         ordering = ["-fecha_hora", "id"]
-        verbose_name = "Prueba pretransfusional PAC"
-        verbose_name_plural = "Pruebas pretransfusionales PAC"
+        verbose_name = "Prueba pretransfusional paciente"
+        verbose_name_plural = "Pruebas pretransfusionales paciente"
 
     def __str__(self):
         return f"PAC {self.id} - {self.paciente_id}"

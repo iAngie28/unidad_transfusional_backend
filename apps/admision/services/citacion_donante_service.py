@@ -33,10 +33,10 @@ class CitacionDonanteValidationService(
                 "fecha",
                 "servicio",
                 "cantidad",
-                "codigo_donante",
                 "hora",
                 "grupo_factor",
                 "tipo",
+                "codigos_donante",
             ),
         )
         cls._capture_errors(errors, cls._validate_common_fields, attrs)
@@ -68,8 +68,8 @@ class CitacionDonanteValidationService(
         if "cantidad" in attrs:
             cls._capture_errors(errors, cls._validate_positive_integer, "cantidad", attrs.get("cantidad"))
 
-        if "codigo_donante" in attrs:
-            cls._capture_errors(errors, cls._validate_codigo_donante, attrs.get("codigo_donante"))
+        if "codigos_donante" in attrs:
+            cls._capture_errors(errors, cls._validate_codigos_donante, attrs.get("codigos_donante"))
 
         if "grupo_factor" in attrs:
             cls._capture_errors(errors, cls._validate_choice, "grupo_factor", attrs.get("grupo_factor"), dict(CitacionDonante.GRUPO_CHOICES))
@@ -91,8 +91,14 @@ class CitacionDonanteValidationService(
             raise ValidationError({"sala_cama": ["Solo se permiten letras, numeros y espacios."]})
 
     @classmethod
-    def _validate_codigo_donante(cls, value):
-        if value in (None, ""):
-            raise ValidationError({"codigo_donante": ["Este campo es obligatorio."]})
-        if not cls.alphanumeric_pattern.fullmatch(str(value)):
-            raise ValidationError({"codigo_donante": ["Solo se permiten letras y numeros."]})
+    def _validate_codigos_donante(cls, codigos_list):
+        if not isinstance(codigos_list, list):
+            raise ValidationError({"codigos_donante": ["Debe ser una lista de códigos."]})
+        if not codigos_list:
+            raise ValidationError({"codigos_donante": ["Debe ingresar al menos un código de donante."]})
+        for item in codigos_list:
+            codigo = item.get("codigo", "")
+            if not codigo:
+                raise ValidationError({"codigos_donante": ["El código no puede estar vacío."]})
+            if not cls.alphanumeric_pattern.fullmatch(str(codigo)):
+                raise ValidationError({"codigos_donante": [f"El código '{codigo}' solo debe contener letras y números."]})

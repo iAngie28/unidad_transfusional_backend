@@ -32,5 +32,11 @@ class PagoSerializer(BaseModelSerializer):
             "created_at",
             "updated_at",
             "created_by",
+            "created_by_name",
+            "updated_by",
+            "updated_by_name",
         ]
-        read_only_fields = ["id", "nro_solicitud", "created_at", "updated_at", "created_by"]
+        read_only_fields = [
+            "id", "nro_solicitud", "created_at", "updated_at", 
+            "created_by", "created_by_name", "updated_by", "updated_by_name"
+        ]

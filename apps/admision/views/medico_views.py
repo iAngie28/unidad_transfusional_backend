@@ -16,3 +16,13 @@ class MedicoViewSet(AuditoriaViewSetMixin, SearchableQuerySetMixin, viewsets.Mod
         "especialidad__nombre",
         "matricula_profesional",
     )
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        especialidad = self.request.query_params.get("especialidad")
+        
+        if especialidad:
+            queryset = queryset.filter(especialidad_id=especialidad)
+            
+        return queryset

@@ -44,6 +44,7 @@ class Command(BaseCommand):
     def crear_roles(self):
         self.stdout.write("- Creando roles...")
         roles_data = {
+            "ADMINISTRADOR": "Administrador del sistema",
             "BIOQUIMICO": "Bioquimico",
             "JEFE_UNIDAD": "Jefe de Unidad",
         }
@@ -55,15 +56,32 @@ class Command(BaseCommand):
             )
             roles[nombre] = rol
 
-        User.objects.filter(rol__nombre="ADMINISTRADOR").update(rol=roles["JEFE_UNIDAD"])
         User.objects.filter(rol__nombre="TECNICO").update(rol=roles["BIOQUIMICO"])
-        Rol.objects.filter(nombre__in=["ADMINISTRADOR", "TECNICO"]).delete()
+        Rol.objects.filter(nombre="TECNICO").delete()
+
+        # Asignar todos los permisos al rol ADMINISTRADOR
+        from django.contrib.auth.models import Permission
+        if "ADMINISTRADOR" in roles:
+            todos_los_permisos = Permission.objects.all()
+            roles["ADMINISTRADOR"].permisos.set(todos_los_permisos)
 
         return roles
 
     def crear_usuarios(self, roles):
         self.stdout.write("- Creando usuarios...")
         usuarios_data = [
+            {
+                "username": "admin",
+                "password": "password123",
+                "first_name": "Admin",
+                "last_name": "Sistema",
+                "apellido_materno": "",
+                "email": "admin@example.com",
+                "telefono": "70000000",
+                "rol": roles["ADMINISTRADOR"],
+                "is_staff": True,
+                "is_superuser": True,
+            },
             {
                 "username": "bio01",
                 "password": "password123",
@@ -92,9 +110,13 @@ class Command(BaseCommand):
         for data in usuarios_data:
             password = data.pop("password")
             username = data.pop("username")
+            
+            # Extract is_superuser if present, otherwise False
+            is_superuser = data.pop("is_superuser", False)
+            
             user, _ = User.objects.update_or_create(
                 username=username,
-                defaults={**data, "is_active": True},
+                defaults={**data, "is_active": True, "is_superuser": is_superuser},
             )
             user.set_password(password)
             user.save()
@@ -230,6 +252,7 @@ class Command(BaseCommand):
                 "user": bio,
                 "paciente": pacientes["12345678"],
                 "medico": medicos["MP-001"],
+                "servicio": servicios["Medicina Interna"],
             },
             {
                 "nro": "2",
@@ -243,11 +266,12 @@ class Command(BaseCommand):
                 "grupo": "O-",
                 "hemocomponente": "PLASMA_FRESCO_CONGELADO",
                 "cantidad": 1,
-                "tipo_urgencia": "RUTINA",
+                "tipo_urgencia": "EN_EL_DIA",
                 "diagnostico": "Preparacion preoperatoria",
                 "user": bio,
                 "paciente": pacientes["87654321"],
                 "medico": medicos["MP-002"],
+                "servicio": servicios["Cirugia"],
             },
         ]
 
@@ -289,7 +313,7 @@ class Command(BaseCommand):
         citaciones = {}
         citaciones_data = [
             {
-                "codigo_donante": "DON001",
+                "codigos": ["DON001"],
                 "solicitud": solicitudes["1"],
                 "user": bio,
                 "fecha": now.date(),
@@ -301,7 +325,7 @@ class Command(BaseCommand):
                 "tipo": "PAQUETE_GLOBULAR",
             },
             {
-                "codigo_donante": "DON002",
+                "codigos": ["DON002", "DON003"],
                 "solicitud": solicitudes["2"],
                 "user": bio,
                 "fecha": (now - timedelta(days=1)).date(),
@@ -313,12 +337,21 @@ class Command(BaseCommand):
                 "tipo": "PLASMA_FRESCO_CONGELADO",
             },
         ]
-        for data in citaciones_data:
-            citacion, _ = CitacionDonante.objects.update_or_create(
-                codigo_donante=data["codigo_donante"],
-                defaults={**data, "created_by": bio},
+        
+        from apps.admision.models import CodigoDonante
+        for idx, data in enumerate(citaciones_data):
+            codigos = data.pop("codigos")
+            citacion = CitacionDonante.objects.create(
+                **data, created_by=bio
             )
-            citaciones[citacion.codigo_donante] = citacion
+            for codigo in codigos:
+                CodigoDonante.objects.create(
+                    citacion=citacion,
+                    codigo=codigo,
+                    created_by=bio
+                )
+            # Use a key to reference it later, e.g. "DON001" or "DON002" based on first code
+            citaciones[codigos[0]] = citacion
 
         return {
             "pacientes": pacientes,

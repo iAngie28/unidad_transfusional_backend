@@ -3,11 +3,12 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views.auth_views import CustomLoginView
-from .views.rol_views import RolViewSet
+from .views.rol_views import PermissionViewSet, RolViewSet
 from .views.user_views import UserViewSet
 
 router = DefaultRouter()
 router.register(r'roles', RolViewSet, basename='roles')
+router.register(r'permisos', PermissionViewSet, basename='permisos')
 router.register(r'usuarios', UserViewSet, basename='usuarios')
 
 urlpatterns = [

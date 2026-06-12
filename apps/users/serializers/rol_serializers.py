@@ -6,9 +6,12 @@ from core.serializers import BaseModelSerializer
 
 
 class PermisoSerializer(serializers.ModelSerializer):
+    modulo = serializers.CharField(source="content_type.name", read_only=True)
+    app = serializers.CharField(source="content_type.app_label", read_only=True)
+
     class Meta:
         model = Permission
-        fields = ["id", "codename", "name", "content_type"]
+        fields = ["id", "codename", "name", "modulo", "app"]
 
 
 class RolSerializer(BaseModelSerializer):
