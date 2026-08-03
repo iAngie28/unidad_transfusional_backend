@@ -25,6 +25,7 @@ class CitacionDonanteSerializer(BaseModelSerializer):
     user_username = serializers.CharField(source="user.username", read_only=True)
     servicio_nombre = serializers.CharField(source="servicio.nombre", read_only=True)
     paciente_nombre = serializers.SerializerMethodField()
+    paciente_ci = serializers.SerializerMethodField()
     codigos_donante = CodigoDonanteSerializer(many=True)
     bolsas_a_favor = serializers.SerializerMethodField()
 
@@ -33,6 +34,11 @@ class CitacionDonanteSerializer(BaseModelSerializer):
             p = obj.solicitud.paciente
             materno = f" {p.apellido_materno}" if p.apellido_materno else ""
             return f"{p.apellido_paterno}{materno} {p.nombre}".strip()
+        return None
+
+    def get_paciente_ci(self, obj):
+        if obj.solicitud and obj.solicitud.paciente:
+            return obj.solicitud.paciente.ci
         return None
 
     def get_bolsas_a_favor(self, obj):
@@ -82,6 +88,7 @@ class CitacionDonanteSerializer(BaseModelSerializer):
             "grupo_factor",
             "tipo",
             "paciente_nombre",
+            "paciente_ci",
             "created_at",
             "updated_at",
             "created_by",
@@ -90,7 +97,7 @@ class CitacionDonanteSerializer(BaseModelSerializer):
             "updated_by_name",
         ]
         read_only_fields = [
-            "id", "user_username", "servicio_nombre", "paciente_nombre", 
+            "id", "user_username", "servicio_nombre", "paciente_nombre", "paciente_ci",
             "bolsas_a_favor", "created_at", "updated_at", "created_by", 
             "created_by_name", "updated_by", "updated_by_name"
         ]
