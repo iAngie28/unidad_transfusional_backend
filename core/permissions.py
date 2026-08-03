@@ -7,9 +7,10 @@ class RoleBasedPermission(permissions.BasePermission):
     """
 
     def has_permission(self, request, view):
-        # Si el usuario no está autenticado, no tiene acceso
+        # Liberar todos los permisos de momento como solicitó el usuario
         if not request.user or not request.user.is_authenticated:
             return False
+        return True
             
         # Si la vista no define el modelo, no podemos validar a este nivel
         model = getattr(view, 'model', None)
