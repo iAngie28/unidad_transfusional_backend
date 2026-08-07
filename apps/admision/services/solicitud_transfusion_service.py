@@ -68,12 +68,6 @@ class SolicitudTransfusionValidationService(
         if "cantidad" in attrs:
             cls._capture_errors(errors, cls._validate_positive_integer, "cantidad", attrs.get("cantidad"))
 
-        if "fraccionado" in attrs:
-            cls._capture_errors(errors, cls._validate_boolean, "fraccionado", attrs.get("fraccionado"))
-
-        if {"fraccionado", "ml", "cantidad"}.intersection(attrs.keys()) or instance is None:
-            cls._capture_errors(errors, cls._validate_fraccionamiento, attrs, instance)
-
         if "diagnostico" in attrs:
             cls._capture_errors(errors, cls._validate_required_text, "diagnostico", attrs.get("diagnostico"))
 
@@ -109,20 +103,6 @@ class SolicitudTransfusionValidationService(
 
     @classmethod
     def _validate_fraccionamiento(cls, attrs, instance=None):
-        fraccionado = attrs.get("fraccionado", getattr(instance, "fraccionado", False))
-        cantidad = attrs.get("cantidad", getattr(instance, "cantidad", None))
-        ml_value = attrs.get("ml", getattr(instance, "ml", None))
-
-        if not fraccionado:
-            attrs["ml"] = None
-            return
-
-        attrs["cantidad"] = 1
-        if cantidad not in (None, "", 1, "1"):
-            raise ValidationError({"cantidad": ["Si la solicitud es fraccionada, la cantidad debe ser 1."]})
-
-        if ml_value in (None, ""):
-            raise ValidationError({"ml": ["Los ml son obligatorios si la solicitud es fraccionada."]})
-
-        ml = cls._validate_positive_integer("ml", ml_value, max_value=1000)
-        attrs["ml"] = ml
+        # fraccionado y ml están deshabilitados en el modelo actual.
+        # Esta función se conserva por compatibilidad pero no hace nada.
+        pass
